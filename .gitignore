@@ -1,0 +1,11 @@
+
+lib/*
+include/*
+
+!lib/.gitkeep
+!include/.gitkeep
+
+*.o
+*.a
+*.so
+*.exe
