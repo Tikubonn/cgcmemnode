@@ -5,7 +5,9 @@
 #include "memnode.h"
 #include "bitarray.h"
 
-typedef unsigned short cgcmemnode_counter;
+typedef unsigned int cgcmemnode_counter;
+
+#define CGCMEMNODE_COUNTER_MAX ((cgcmemnode_counter)~0)
 
 typedef struct cgcmemnode {
   memnode memnode;

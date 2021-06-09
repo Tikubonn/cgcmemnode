@@ -17,7 +17,7 @@ printf("error: %s at %s:%d\n", #form, __FILE__, __LINE__); abort();\
 static void test_cgcmemnode_gc (){
   // allocate and decrease. 
   {
-    MAKE_LOCAL_CGCMEMNODE(cmemnode, 128, CGCMEMNODE_DEFAULT_RESOLUTION, NULL);
+    MAKE_LOCAL_CGCMEMNODE(cmemnode, 128, sizeof(int) * 3, NULL);
     int *value1 = cgcmemnode_allocate(sizeof(int), cmemnode);
     int *value2 = cgcmemnode_allocate(sizeof(int), cmemnode);
     int *value3 = cgcmemnode_allocate(sizeof(int), cmemnode);

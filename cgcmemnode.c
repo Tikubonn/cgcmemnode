@@ -10,6 +10,10 @@
 #define MIN(a, b) ((a)<(b)?(a):(b))
 #endif
 
+#ifndef MAX
+#define MAX(a, b) ((a)<(b)?(b):(a))
+#endif
+
 bool cgcmemnode_history_recordp (void *address, cgcmemnode_history *history){
   for (cgcmemnode_history *hist = history; hist != NULL; hist = hist->previous){
     if (hist->address == address){ return true; }
@@ -101,7 +105,12 @@ int cgcmemnode_increase (void *address, size_t size, cgcmemnode *cmemnode){
   size_t cend;
   if (cgcmemnode_find(address, size, cmemnode, &foundcmemnode, &cstart, &cend) != 0){ return 1; }
   for (size_t index = cstart; index < cend; index++){
-    foundcmemnode->counterseq[index] += 1;
+    if (foundcmemnode->counterseq[index] < CGCMEMNODE_COUNTER_MAX){
+      foundcmemnode->counterseq[index] += 1;
+    }
+    else {
+      return 1;
+    }
   }
   return 0;
 }
@@ -119,7 +128,7 @@ int cgcmemnode_decrease (void *address, size_t size, cgcmemnode *cmemnode){
       }
     }
     else {
-      return 1; 
+      return 1;
     }
   }
   return 0;
