@@ -47,6 +47,7 @@ extern size_t cgcmemnode_require_counter_length (size_t, size_t);
 extern void cgcmemnode_init (void*, size_t, cgcmemnode_counter*, size_t, size_t, bitarray*, cgcmemnode*, cgcmemnode*);
 extern cgcmemnode *make_cgcmemnode (size_t, size_t, cgcmemnode*);
 extern void free_cgcmemnode (cgcmemnode*);
+extern void free_cgcmemnode_all (cgcmemnode*);
 extern memnode *cgcmemnode_memnode (cgcmemnode*);
 extern cgcmemnode *cgcmemnode_next (cgcmemnode*);
 extern int cgcmemnode_increase (void*, size_t, cgcmemnode*);

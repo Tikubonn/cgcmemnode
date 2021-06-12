@@ -68,13 +68,16 @@ cgcmemnode *make_cgcmemnode (size_t size, size_t resolution, cgcmemnode *nextnod
 }
 
 void free_cgcmemnode (cgcmemnode *cmemnode){
+  free(cmemnode->memnode.sequence);
+  free(cmemnode->counterseq);
+  free(cmemnode);
+}
+
+void free_cgcmemnode_all (cgcmemnode *cmemnode){
   cgcmemnode *cmnode = cmemnode;
   while (cmnode != NULL){
     cgcmemnode *nextnode = cgcmemnode_next(cmnode);
-    free_bitarray(cmnode->memnode.reservemask);
-    free(cmnode->memnode.sequence);
-    free(cmnode->counterseq);
-    free(cmnode);
+    free_cgcmemnode(cmnode);
     cmnode = nextnode;
   }
 }

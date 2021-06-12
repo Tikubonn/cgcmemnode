@@ -132,7 +132,7 @@ static void test_make_cgcmemnode (){
     TEST(value4 == value1);
     TEST(value5 == value2);
     TEST(value6 == value3);
-    free_cgcmemnode(cmemnode);
+    free_cgcmemnode_all(cmemnode);
   }
 }
 
@@ -154,7 +154,48 @@ static void test_make_cgcmemnode2 (){
     TEST(value3 - value2 == 40);
     TEST(cgcmemnode_increase(value3, 40, mnode) == 0);
     TEST(cgcmemnode_decrease(value3, 40, mnode) == 0);
-    free_cgcmemnode(mnode);
+    free_cgcmemnode_all(mnode);
+  }
+}
+
+static void test_cgcmemnode_emptyp (){
+  // check empty.
+  {
+    cgcmemnode *cmemnode = make_cgcmemnode(128, CGCMEMNODE_DEFAULT_RESOLUTION, NULL);
+    TEST(cmemnode != NULL);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == true);
+    int *value1 = cgcmemnode_allocate(sizeof(int), cmemnode);
+    int *value2 = cgcmemnode_allocate(sizeof(int), cmemnode);
+    int *value3 = cgcmemnode_allocate(sizeof(int), cmemnode);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_decrease(value1, sizeof(int), cmemnode) == 0);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_decrease(value2, sizeof(int), cmemnode) == 0);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_decrease(value3, sizeof(int), cmemnode) == 0);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == true);
+    free_cgcmemnode_all(cmemnode);
+  }
+  // check empty with cgcmemnode_increase.
+  {
+    cgcmemnode *cmemnode = make_cgcmemnode(128, CGCMEMNODE_DEFAULT_RESOLUTION, NULL);
+    TEST(cmemnode != NULL);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == true);
+    int *value1 = cgcmemnode_allocate(sizeof(int), cmemnode);
+    int *value2 = cgcmemnode_allocate(sizeof(int), cmemnode);
+    int *value3 = cgcmemnode_allocate(sizeof(int), cmemnode);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_increase(value2, sizeof(int), cmemnode) == 0); // increase value2.
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_decrease(value1, sizeof(int), cmemnode) == 0);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_decrease(value2, sizeof(int), cmemnode) == 0);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_decrease(value3, sizeof(int), cmemnode) == 0);
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == false);
+    TEST(cgcmemnode_decrease(value2, sizeof(int), cmemnode) == 0); // decrease value2 twice.
+    TEST(memnode_emptyp(cgcmemnode_memnode(cmemnode)) == true);
+    free_cgcmemnode_all(cmemnode);
   }
 }
 
@@ -162,5 +203,6 @@ int main (){
   test_cgcmemnode_gc();
   test_make_cgcmemnode();
   test_make_cgcmemnode2();
+  test_cgcmemnode_emptyp();
   return 0;
 }
